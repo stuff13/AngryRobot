@@ -1,20 +1,31 @@
-﻿using UnityEditor;
-using System;
-class BuildScript
-{
-	static void BuildWebPlayer ()
+﻿class BuildScript {
+	static string[] SCENES = FindEnabledEditorScenes();
+	
+	static string APP_NAME = "YourProject";
+	static string TARGET_DIR = "target";
+	
+	[MenuItem ("Custom/CI/Build Mac OS X")]
+	static void PerformMacOSXBuild ()
 	{
-		string buildTarget = System.Environment.GetEnvironmentVariable("UNITY_BUILD_TARGET");
-		if (buildTarget == null || buildTarget.Length == 0) {
-			throw new Exception("UNITY_BUILD_TARGET -system property not defined, aborting.");
+		string target_dir = APP_NAME + ".app";
+		GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneOSXIntel,BuildOptions.None);
+	}
+	
+	private static string[] FindEnabledEditorScenes() {
+		List<string> EditorScenes = new List<string>();
+		foreach(EditorBuildSettingsScene scene in EditorBuildSettings.scenes) {
+			if (!scene.enabled) continue;
+			EditorScenes.Add(scene.path);
 		}
-		
-		string[] scenes = { "Assets/AngryBots.unity" /*, "Assets/Level1.unity", "Assets/Level2.unity", "Assets/Level3.unity"*/ };
-		
-		string error = BuildPipeline.BuildPlayer(scenes, buildTarget, BuildTarget.WebPlayerStreamed, BuildOptions.None);
-		
-		if (error != null && error.Length > 0) {
-			throw new Exception("Build failed: " + error);
+		return EditorScenes.ToArray();
+	}
+	
+	static void GenericBuild(string[] scenes, string target_dir, BuildTarget build_target, BuildOptions build_options)
+	{
+		EditorUserBuildSettings.SwitchActiveBuildTarget(build_target);
+		string res = BuildPipeline.BuildPlayer(scenes,target_dir,build_target,build_options);
+		if (res.Length > 0) {
+			throw new Exception("BuildPlayer failure: " + res);
 		}
 	}
 }
