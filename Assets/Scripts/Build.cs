@@ -1,15 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEditor;
-using System;
-using System.Collections.Generic;
-
-public class BuildScript{
-	
+﻿class MyEditorScript {
 	static string[] SCENES = FindEnabledEditorScenes();
 	
-	static string APP_NAME = "<yourAPPName>";
-	static string TARGET_DIR = "<YourTargetDir>";
+	static string APP_NAME = "YourProject";
+	static string TARGET_DIR = "target";
 	
 	[MenuItem ("Custom/CI/Build Mac OS X")]
 	static void PerformMacOSXBuild ()
@@ -18,13 +11,6 @@ public class BuildScript{
 		GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneOSXIntel,BuildOptions.None);
 	}
 	
-//	[MenuItem ("Custom/CI/Build Web")]
-//	static void PerformWebBuild ()
-//	{
-//		string target_dir = APP_NAME + ".unity3d";
-//		GenericBuild(SCENES, TARGET_DIR + "/web/" + target_dir, BuildTarget.WebPlayer,BuildOptions.None);
-//	}
-//	
 	private static string[] FindEnabledEditorScenes() {
 		List<string> EditorScenes = new List<string>();
 		foreach(EditorBuildSettingsScene scene in EditorBuildSettings.scenes) {
@@ -42,5 +28,4 @@ public class BuildScript{
 			throw new Exception("BuildPlayer failure: " + res);
 		}
 	}
-	
 }
