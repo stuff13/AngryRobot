@@ -26,7 +26,7 @@ public class BuildScript{
 //	}
 //	
 	private static string[] FindEnabledEditorScenes() {
-		List&lt;string&gt; EditorScenes = new List&lt;string&gt;();
+		List<string> EditorScenes = new List<string>();
 		foreach(EditorBuildSettingsScene scene in EditorBuildSettings.scenes) {
 			if (!scene.enabled) continue;
 			EditorScenes.Add(scene.path);
@@ -38,7 +38,7 @@ public class BuildScript{
 	{
 		EditorUserBuildSettings.SwitchActiveBuildTarget(build_target);
 		string res = BuildPipeline.BuildPlayer(scenes,target_dir,build_target,build_options);
-		if (res.Length &gt; 0) {
+		if (res.Length > 0) {
 			throw new Exception("BuildPlayer failure: " + res);
 		}
 	}
